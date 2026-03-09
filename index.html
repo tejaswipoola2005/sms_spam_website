@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SMS Spam Detector</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: "Segoe UI", sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background: linear-gradient(135deg,#f5f7fa,#c3cfe2);
+}
+.flash {
+  animation: flicker 0.4s ease-in-out 1;
+}
+
+@keyframes flicker {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+.container{
+background: rgba(255,255,255,0.6);
+backdrop-filter: blur(10px);
+padding:40px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+width:420px;
+text-align:center;
+}
+
+h1{
+margin-bottom:25px;
+color:#333;
+}
+
+#message{
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+font-size:16px;
+background:#f1f1f1;
+outline:none;
+transition:0.3s;
+}
+
+#message:focus{
+background:#fff;
+box-shadow:0 0 0 2px #a855f7;
+}
+
+button{
+margin-top:20px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+background:linear-gradient(135deg,#a855f7,#7c3aed);
+color:white;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 15px rgba(124,58,237,0.3);
+}
+
+#result{
+margin-top:25px;
+font-size:20px;
+font-weight:600;
+color:#444;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📩 SMS Spam Classifier</h1>
+
+<!-- <input id="message" placeholder="Enter SMS message"> -->
+<textarea placeholder="Enter your message here" rows=5 cols=50 name="msg" id="message"></textarea>
+
+<button onclick="checkSpam()">Predict</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+async function checkSpam(){
+
+let msg = document.getElementById("message").value;
+console.log(msg)
+
+let response = await fetch(
+"https://sms-spam-api-w26a.onrender.com/predict?message=" + encodeURIComponent(msg)
+);
+
+
+let data = await response.json();
+let result = document.getElementById("result");
+result.innerHTML =
+"Prediction : " + data.prediction;
+result.classList.remove("flash"); // reset animation
+void result.offsetWidth; // force reflow
+result.classList.add("flash"); // trigger flicker
+}
+
+</script>
+
+</body>
+</html>
